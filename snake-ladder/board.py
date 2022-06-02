@@ -3,9 +3,8 @@
 class Board:
     """docstring for ."""
 
-    def __init__(self, snakes=[], ladders=[], n=10, m=10):
-        self.snakes = snakes
-        self.ladders = ladders
+    def __init__(self, snake_n_ladders={}, n=10, m=10):
+        self.snake_n_ladders = snake_n_ladders
         self.n = n
         self.m = m
         self.position_h = {}
@@ -26,6 +25,15 @@ class Board:
                         self.position_h[(i, j)] = c
                         c += 1
 
+    def assign_snake_n_ladders(self, snake_n_ladders):
+        self.snake_n_ladders = snake_n_ladders
+
+
+    def get_final_pos(self, pos, seen=set()):
+        if pos not in self.snake_n_ladders or pos in seen:
+            return pos
+        seen.add(pos)
+        return self.get_final_pos(self.snake_n_ladders[pos], seen)
 
     def has_player_won(self, player):
         return player.pos == self.get_pos_in_x_y((self.n * self.m))
@@ -45,6 +53,6 @@ class Board:
 
     def display_board(self):
         for i in range(self.m -1, -1, -1):
-            print()
             for j in range(self.n):
                 print(self.board_arr[i][j], end = '\t')
+            print()
